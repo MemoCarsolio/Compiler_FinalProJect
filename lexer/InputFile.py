@@ -8,8 +8,9 @@ class InputFile:
         self.columnN = 1
         aux = self.file.read()
         self.lines = 0
-
+        self.size = 0
         for ch in aux:
+            self.size += 1
             if ch == "\n":
                 self.lines += 1
             self.data.append(ch)

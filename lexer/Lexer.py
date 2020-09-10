@@ -36,12 +36,44 @@ class Lexer:
         reserve(Word("and",Tag.AND),self.words)
         reserve(Word("or",Tag.OR),self.words)
 
+        self.file = InputFile(filename)
+        self.peek = ''
 
         pass
 
     def isReserved(self,key):
         if key in self.words:
             pass
+    def readCh(self):
+        self.peek = self.file.getChar()
+
+    def emSpaces(self):
+        self.peek = self.file.peekCh()
+        while self.peek.isspace():
+            self.peek + self.file.getChar()
+
+    def readCharString(self):
+        auxString = ""
+        self.peek = self.file.getChar()
+        while self.peek != '"' :
+            auxString += self.peek
+
+        auxString += self.peek
+        readCh()
+
+        return CharacterString(auxString)
+
+    def readComments(self):
+        prev = self.file.position
+        curr = self.file.position + 1
+
+        while current < self.file.size and self.file.data[prev] != "*" and self.file.data[curr] != ")":
+            prev = curr
+            curr += 1
+
+        self.file.position = curr + 1
+        return Token(Tag.COMMENTS)
+
 
 
 def wordprep(wordList, wds):
