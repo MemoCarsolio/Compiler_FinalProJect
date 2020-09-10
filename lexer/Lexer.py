@@ -42,6 +42,11 @@ class Lexer:
 
         pass
 
+    def isReserved(self,key):
+        if key in self.words:
+            return True
+        return False
+
     def getReserved(self,key):
         if key in self.words:
             return self.words[key]
@@ -146,6 +151,24 @@ class Lexer:
                     break
                 auxSD += str(self.peek)
             return Real(float(auxSD))
+
+        if self.peek.isalpha():
+            auxSA = ""
+            auxSA += str(self.peek)
+            self.readCh()
+            while self.peek.isalpha():
+                auxSA += str(self.peek)
+                self.readCh()
+            if self.isReserved(auxSA):
+                return self.getReserved(auxSA)
+            else:
+                w = Word(auxSA, Tag.ID)
+                reserve(w,self.words)
+                return w
+
+        tempTok = Token(self.peek)
+        readch();
+        return tok;
 
 
 
