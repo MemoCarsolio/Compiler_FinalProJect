@@ -39,5 +39,5 @@ class Tag:
     MINUS	 = 289
     ID		 = 290
     CHARACTERSTRING = 291
-    COMMMENTS = 292
+    COMMENTS = 292
     ERROR = 9999

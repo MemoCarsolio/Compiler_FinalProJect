@@ -7,3 +7,6 @@ class Token:
 
     def getTag(self):
         return self.tag
+
+    def toString(self):
+        return "TOKEN - VALUE = " + str(self.tag)

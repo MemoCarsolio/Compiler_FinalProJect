@@ -3,6 +3,7 @@ from .Tag import *
 from .InputFile import *
 from .Integer import *
 from .Real import *
+from .CharString import *
 
 class Lexer:
 
@@ -46,28 +47,32 @@ class Lexer:
             return self.words[key]
 
     def readCh(self):
+
         self.peek = self.file.getChar()
 
     def checkReadChar(self, c):
         self.readCh()
+
         if self.peek != c:
+            self.file.position += 1
             return False
+        self.file.position += 1
         return True
 
     def emSpaces(self):
         self.peek = self.file.peekCh()
         while self.peek.isspace():
-            print(self.peek)
-            self.peek = self.file.getChar()
+            self.readCh()
+
 
     def readCharString(self):
         auxString = "" + self.peek
         self.peek = self.file.getChar()
         while self.peek != '"' :
             auxString += self.peek
-
+            self.peek = self.file.getChar()
         auxString += self.peek
-        readCh()
+        self.readCh()
 
         return CharacterString(auxString)
 
@@ -75,7 +80,7 @@ class Lexer:
         prev = self.file.position
         curr = self.file.position + 1
 
-        while current < self.file.size and self.file.data[prev] != "*" and self.file.data[curr] != ")":
+        while curr < self.file.size and self.file.data[prev] != "*" and self.file.data[curr] != ")":
             prev = curr
             curr += 1
 
@@ -84,6 +89,9 @@ class Lexer:
 
     def scan(self):
         self.emSpaces()
+
+
+
 
         if self.peek == "(":
             if self.checkReadChar("*"):
