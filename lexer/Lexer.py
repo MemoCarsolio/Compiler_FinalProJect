@@ -1,6 +1,6 @@
 from .Word import *
 from .Tag import *
-
+from .InputFile import *
 
 
 
@@ -35,8 +35,8 @@ class Lexer:
         reserve(Word("mod",Tag.MOD),self.words)
         reserve(Word("and",Tag.AND),self.words)
         reserve(Word("or",Tag.OR),self.words)
-        self.file = open(filename, "r")
-        peek = ""
+
+
         pass
 
     def isReserved(self,key):

@@ -1,15 +1,10 @@
 from lexer import *
 
 
+file = InputFile("text.txt")
 
-x = Lexer("text.txt")
-
-
-
-text = []
-
-stuff = x.file.read()
-
-for ch in stuff:
-    text.append(ch)
-print(text)
+print(file.getChar())
+print(file.getChar())
+print(file.getChar())
+print(file.getChar())
+file.file.close()
