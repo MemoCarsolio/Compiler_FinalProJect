@@ -28,7 +28,7 @@ class InputFile:
         return c
 
     def peekCh(self):
-        return self.data[position]
+        return self.data[self.position]
 
 
     def isE0F(self):

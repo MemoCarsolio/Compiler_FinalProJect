@@ -3,4 +3,16 @@ from lexer import *
 
 lex = Lexer("text.txt")
 
-print(lex.getReserved("<=").getLexeme())
+
+
+test = [1,3,4,".",5,8]
+
+
+
+print(lex.scan().getTag())
+print(lex.scan().getTag())
+print(lex.scan().getTag())
+print(lex.scan().getTag())
+print(lex.scan().getTag())
+print(lex.scan().getTag())
+print(lex.scan().getTag())

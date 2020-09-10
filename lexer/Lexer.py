@@ -1,8 +1,8 @@
 from .Word import *
 from .Tag import *
 from .InputFile import *
-
-
+from .Integer import *
+from .Real import *
 
 class Lexer:
 
@@ -49,7 +49,7 @@ class Lexer:
         self.peek = self.file.getChar()
 
     def checkReadChar(self, c):
-        readCh()
+        self.readCh()
         if self.peek != c:
             return False
         return True
@@ -57,7 +57,8 @@ class Lexer:
     def emSpaces(self):
         self.peek = self.file.peekCh()
         while self.peek.isspace():
-            self.peek + self.file.getChar()
+            print(self.peek)
+            self.peek = self.file.getChar()
 
     def readCharString(self):
         auxString = "" + self.peek
@@ -82,43 +83,64 @@ class Lexer:
         return Token(Tag.COMMENTS)
 
     def scan(self):
-        emSpaces()
+        self.emSpaces()
 
         if self.peek == "(":
-            if checkReadChar("*"):
-                return readComments()
+            if self.checkReadChar("*"):
+                return self.readComments()
 
             else:
                 return Token("(")
 
         elif self.peek == "<":
-            if checkReadChar("="):
-                return getReserved("<=")
-            elif checkReadChar(">"):
-                return getReserved("<>")
+            if self.checkReadChar("="):
+                return self.getReserved("<=")
+            elif self.peek == ">":
+                return self.getReserved("<>")
             else:
                 return Token("<")
 
         elif self.peek == ">":
-            if checkReadChar("="):
-                return getReserved(">=")
+            if self.checkReadChar("="):
+                return self.getReserved(">=")
             else:
                 return Token(">")
 
         elif self.peek == "=":
-            if checkReadChar("="):
-                return getReserved("==")
+            if self.checkReadChar("="):
+                return self.getReserved("==")
             else:
                 return Token("=")
 
         elif self.peek == ":":
-            if checkReadChar("="):
-                return getReserved(":=")
+            if self.checkReadChar("="):
+                return self.getReserved(":=")
             else:
                 return Token(":")
 
         elif self.peek == '"':
-                return readCharString()
+                return self.readCharString()
+
+        if self.peek.isdigit():
+            auxSD = ""
+            auxSD += str(self.peek)
+            self.readCh()
+            while self.peek.isdigit():
+                auxSD += str(self.peek)
+                self.readCh()
+            if self.peek != ".":
+                return Integer(int(auxSD))
+
+            auxSD += str(self.peek)
+            while True:
+                self.readCh()
+                if self.peek.isdigit() == False:
+                    break
+                auxSD += str(self.peek)
+            return Real(float(auxSD))
+
+
+
 
 
 
