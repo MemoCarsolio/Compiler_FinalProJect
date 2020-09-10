@@ -41,11 +41,18 @@ class Lexer:
 
         pass
 
-    def isReserved(self,key):
+    def getReserved(self,key):
         if key in self.words:
-            pass
+            return self.words[key]
+
     def readCh(self):
         self.peek = self.file.getChar()
+
+    def checkReadChar(self, c):
+        readCh()
+        if self.peek != c:
+            return False
+        return True
 
     def emSpaces(self):
         self.peek = self.file.peekCh()
@@ -53,7 +60,7 @@ class Lexer:
             self.peek + self.file.getChar()
 
     def readCharString(self):
-        auxString = ""
+        auxString = "" + self.peek
         self.peek = self.file.getChar()
         while self.peek != '"' :
             auxString += self.peek
@@ -73,6 +80,45 @@ class Lexer:
 
         self.file.position = curr + 1
         return Token(Tag.COMMENTS)
+
+    def scan(self):
+        emSpaces()
+
+        if self.peek == "(":
+            if checkReadChar("*"):
+                return readComments()
+
+            else:
+                return Token("(")
+
+        elif self.peek == "<":
+            if checkReadChar("="):
+                return getReserved("<=")
+            elif checkReadChar(">"):
+                return getReserved("<>")
+            else:
+                return Token("<")
+
+        elif self.peek == ">":
+            if checkReadChar("="):
+                return getReserved(">=")
+            else:
+                return Token(">")
+
+        elif self.peek == "=":
+            if checkReadChar("="):
+                return getReserved("==")
+            else:
+                return Token("=")
+
+        elif self.peek == ":":
+            if checkReadChar("="):
+                return getReserved(":=")
+            else:
+                return Token(":")
+
+        elif self.peek == '"':
+                return readCharString()
 
 
 
