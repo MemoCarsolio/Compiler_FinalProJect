@@ -1,25 +1,17 @@
 from lexer import *
-
-
-lex = Lexer("text.txt")
-
-
-
-test = [1,3,4,".",5,8]
+import sys
 
 
 
+if len(sys.argv) != 2:
+    print("usage: main.py file")
+else:
+    lex = Lexer(sys.argv[1])
 
-print(lex.scan().toString())
-
-print(lex.scan().toString())
-
-print(lex.scan().toString())
-
-print(lex.scan().toString())
-
-print(lex.scan().toString())
-
-print(lex.scan().toString())
-
-print(lex.scan().toString())
+    while True:
+        aux = lex.scan()
+        
+        if aux.getTag() == 65535:
+            print("Token = E0F")
+            break
+        print(aux.toString())

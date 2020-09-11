@@ -59,23 +59,30 @@ class Lexer:
         self.readCh()
 
         if self.peek != c:
-            self.file.position += 1
+            #self.file.position += 1
             return False
         self.file.position += 1
         return True
 
     def emSpaces(self):
+
         self.peek = self.file.peekCh()
+
         while self.peek.isspace():
             self.readCh()
+            if self.peek == None:
+                break
 
 
     def readCharString(self):
         auxString = "" + self.peek
         self.peek = self.file.getChar()
-        while self.peek != '"' :
+        while self.peek != '"' and self.peek != "'" :
             auxString += self.peek
             self.peek = self.file.getChar()
+            if self.peek == None:
+                return CharacterString(auxString)
+                pass
         auxString += self.peek
         self.readCh()
 
@@ -86,6 +93,8 @@ class Lexer:
         curr = self.file.position + 1
 
         while curr < self.file.size and self.file.data[prev] != "*" and self.file.data[curr] != ")":
+            if self.file.peekCh == None:
+                break
             prev = curr
             curr += 1
 
@@ -95,7 +104,8 @@ class Lexer:
     def scan(self):
         self.emSpaces()
 
-
+        if self.peek == None:
+            return Token(Tag.EOF)
 
 
         if self.peek == "(":
@@ -131,7 +141,7 @@ class Lexer:
             else:
                 return Token(":")
 
-        elif self.peek == '"':
+        elif self.peek == '"' or self.peek == "'":
                 return self.readCharString()
 
         if self.peek.isdigit():
@@ -156,7 +166,7 @@ class Lexer:
             auxSA = ""
             auxSA += str(self.peek)
             self.readCh()
-            while self.peek.isalpha():
+            while self.peek.isalpha() or self.peek.isdigit():
                 auxSA += str(self.peek)
                 self.readCh()
             if self.isReserved(auxSA):
@@ -167,8 +177,8 @@ class Lexer:
                 return w
 
         tempTok = Token(self.peek)
-        readch();
-        return tok;
+        self.readCh();
+        return tempTok;
 
 
 
