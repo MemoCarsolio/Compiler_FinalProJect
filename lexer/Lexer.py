@@ -177,8 +177,8 @@ class Lexer:
                 return w
 
         tempTok = Token(self.peek)
-        self.readCh();
-        return tempTok;
+        self.readCh()
+        return tempTok
 
 
 
