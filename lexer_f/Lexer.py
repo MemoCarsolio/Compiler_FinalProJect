@@ -37,19 +37,22 @@ class Lexer:
         reserve(Word("and",Tag.AND),self.words)
         reserve(Word("or",Tag.OR),self.words)
 
+
+
+
         self.file = InputFile(filename)
         self.peek = ''
 
         pass
 
     def isReserved(self,key):
-        if key in self.words:
+        if key.lower() in self.words:
             return True
         return False
 
     def getReserved(self,key):
-        if key in self.words:
-            return self.words[key]
+        if key.lower() in self.words:
+            return self.words[key.lower()]
 
     def readCh(self):
 
@@ -170,11 +173,13 @@ class Lexer:
                 auxSA += str(self.peek)
                 self.readCh()
             if self.isReserved(auxSA):
+
                 return self.getReserved(auxSA)
             else:
                 w = Word(auxSA, Tag.ID)
                 reserve(w,self.words)
                 return w
+
 
         tempTok = Token(self.peek)
         self.readCh()

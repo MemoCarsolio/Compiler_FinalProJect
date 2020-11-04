@@ -7,6 +7,8 @@ class Word(Token):
         super().__init__(tag)
         self.lexeme = lexeme
 
+
+
     def getLexeme(self):
         return str(self.lexeme)
 

@@ -38,6 +38,7 @@ class Tag:
     OR		 = 288
     MINUS	 = 289
     ID		 = 290
+    SEMCOL   = 291
     CHARACTERSTRING = 291
     COMMENTS = 292
     ERROR = 9999
