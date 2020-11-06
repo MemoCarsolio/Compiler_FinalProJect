@@ -12,10 +12,14 @@ else:
     while True:
         aux = lex.scan()
 
+        
+
+
+
         if aux.getTag() == 65535:
             print("Token = E0F")
             break
-        print(aux.toString() + " " +str(aux.getTag()))
+        print(aux.toString() + " " )
 
 
 # par = Parser("test_cases/Example1.pas")
