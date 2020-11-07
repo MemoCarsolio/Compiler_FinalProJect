@@ -1,0 +1,23 @@
+
+Antes de que pueda correr este programa tiene que installar algunos paquetes
+
+Paquetes:
+  pandas
+
+Dependencias de pandas:
+  numpy
+  setuptools
+  python-dataeutil
+  pytz
+
+
+  Intallar:
+  pip install pandas
+  pip install numpy
+  pip install setuptools
+  pip install python-dataeutil
+  pip install pytz
+
+
+A  veces al installar numpy y pandas ya es suficiente pero por precaucion
+pongo rodo

@@ -7,13 +7,12 @@ class Word(Token):
         super().__init__(tag)
         self.lexeme = lexeme
 
-
-
     def getLexeme(self):
         return str(self.lexeme)
 
     def toString(self):
-        return "WORD - LEXEME = " + self.lexeme
+        return self.lexeme
+
 
 eq = Word("==", Tag.EQ)
 ne = Word("<>", Tag.NEQ)
@@ -24,4 +23,4 @@ assign = Word(":=", Tag.ASSIGN)
 true = Word("true", Tag.TRUE)
 false = Word("false", Tag.FALSE)
 
-prewords = [eq,ne,le,ge,minus,assign,true,false]
+prewords = [eq, ne, le, ge, minus, assign, true, false]

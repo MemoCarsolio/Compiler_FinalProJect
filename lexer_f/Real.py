@@ -11,4 +11,4 @@ class Real(Token):
         return self.value
 
     def toString(self):
-        return "REAL - VALUE = " + str(self.value)
+        return "real"

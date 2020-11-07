@@ -1,6 +1,5 @@
 
 
-
 class Token:
     def __init__(self, tag):
         self.tag = tag
@@ -9,4 +8,4 @@ class Token:
         return self.tag
 
     def toString(self):
-        return "TOKEN - VALUE = " + str(self.tag)
+        return str(self.tag)

@@ -1,132 +1,100 @@
 from lexer_f import *
+import pandas as pd
+import math
+from .grammar import *
+
 
 class Parser:
-    """docstring for ."""
-
     def __init__(self, input):
-        self.lex = Lexer(input)
-        pass
 
-    def analize(self):
-        self.token = self.lex.scan()
-        aux = start_p()
-        print("ACCEPTED - Result = " + aux)
-        pass
-    def check(self, tag):
-        if self.token.getTag() == tag:
-            self.token = self.lex.scan()
+        self.input_t = parser_prep(input)
+        self.stack = []
+        self.stack.append(0)
+        self.table = pd.read_csv(
+            "parser_f/Grammar.csv", header=[0], index_col=[0])
+        self.next = self.table[self.input_t[0]['token']][self.stack[0]]
+        self.prevR = self.stack[0]
+
+    def parse(self):
+
+        if not (isinstance(self.next, float) or isinstance(self.next, int)):
+
+            if str(self.next[0]) == "s":
+                self.shift()
+            elif str(self.next[0]) == "r":
+                self.reduce()
+
+            elif self.next == "acc":
+                print("Succesfull Compilation | Exit Code (0)")
+                exit()
+            else:
+                print('Warning: Unexpected Error: 4096')
+
+        elif math.isnan(self.next):
+            if self.input_t[0]["token"] == "$":
+                print(
+                    "E0F Error: '" + self.prevR["value"] + "' pos[" + str(self.prevR["line"]) + ", " + str(
+                        self.prevR["col"]) + "] : ")
+            else:
+                print(
+                    "Syntax Error: '" + self.prevR["value"] + "'  pos[" + str(self.prevR["line"]) + ", " + str(
+                        self.prevR["col"]) + "] ")
+            print("Compilation aborted")
         else:
-            raise Exception("you dumb")
+            self.prevR = self.input_t[0]
+            self.stack.append(int(self.next))
+            self.next = self.table[self.input_t[0]["token"]][self.stack[-1]]
 
+            self.parse()
 
-    def start_p(self):
-        return self.start()
+    def shift(self):
 
-    def start(self):
-        aux = self.program_heading()
-        check(";")
-        aux = aux + "; " + self.program_block()
-        check(".")
-        return aux + "."
+        self.stack.append(self.input_t[0]["token"])
+        self.stack.append(int(self.next[1:len(self.next)]))
+        self.prevR = self.input_t[0]
+        self.input_t.pop(0)
+        self.next = self.table[self.input_t[0]
+                               ["token"]][self.stack[-1]]
+        self.parse()
 
-    def program_heading(self):
-        check(256)
-        check(290)
-        return "program id " + self.opt_program_parameters()
-
-    def program_block(self):
-        aux = self.constant_declaration_part()
-        aux = aux + self.variable_declaration_part()
-        return  aux + self.statement_part()
-
-    def opt_program_parameters(self):
-        if str(self.token.getTag()) == "(":
-            check("(")
-            aux = self.program_parameters()
-            if str(self.token.getTag()) == ")":
-                check(")")
-                return "( " + aux + " )"
+    def reduce(self):
+        value = grammar[int(self.next[1:len(self.next)])]["value"]
+        remove = grammar[int(
+            self.next[1:len(self.next)])]["remove"]
+        self.prevR = self.input_t[0]
+        if remove == 0:
+            self.stack.append(value)
+            self.next = self.table[self.stack[-1]][self.stack[-2]]
+            self.parse()
         else:
-            return ""
 
-    def constant_declaration_part(self):
-        if self.token.getTag() == 257:
-            check(257)
-            aux = "constant " + self.constant_definition()
-            check(";")
-            return aux + "; " + self.more_constant_definition()
-        else:
-            return ""
-
-    def variable_declaration_part(self):
-        if self.token.getTag() == 258:
-            check(258)
-            aux = "var " + self.variable_declaration()
-            check(";")
-            return aux + "; " + self.more_variable_declaration()
-        else:
-            return ""
-    def statement_part(self):
-        check(259)
-        aux = "begin " + self.statement_sequence()
-        check(260)
-        return aux + " end"
-
-    def program_parameters(self):
-        return self.identifier_list()
-
-    def constant_definition(self):
-        check(290)
-        check("=")
-        return "id = " + self.expression()
-
-    def more_constant_definition(self):
-        if self.token.getTag() == 290:
-
-            aux = self.constant_definition()
-            check(";")
-            return aux + "; " + self.more_constant_definition()
-        else:
-            return ""
-
-    def variable_declaration(self):
-        aux = self.identifier_list()
-        check(":")
-        return aux + ": " + self.type()
-
-    def more_variable_declaration(self):
-        if self.token.getTag() == 290:
-            aux = self.variable_declaration()
-            check(";")
-            return aux + "; " + self.more_variable_declaration()
-        else:
-            return ""
-    def statement_sequence(self):
-        aux = self.statement()
-        check(";")
-        return aux "; " self.more_statement()
-
-    def identifier_list(self):
-        check(290)
-        return "id " + self.more_identifier()
-
-    def expression(self):
-        aux = self.simple_expression()
-        return aux + " " + self.opt_rel_expression()
-
-    def statement(self):
+            self.stack = self.stack[:len(self.stack) - remove]
+            self.stack.append(value)
+            self.next = self.table[self.stack[-1]][self.stack[-2]]
+            self.parse()
 
 
+def parser_prep(input):
+    lex = Lexer(input)
+    tokens_dl = []
+    while True:
+        aux = lex.scan()
+        line = lex.getLine()
+        col = lex.getColumn()
 
+        if aux.getTag() == 65535:
+            break
+        if aux.getTag() != 292:
+            if hasattr(aux, 'value'):
+                tokens_dl.append({'token': aux.toString(), 'line': line,
+                                  'col': col, 'value': aux.getValue()})
+            elif aux.getTag() == 290:
+                tokens_dl.append({'token': 'id', 'line': line,
+                                  'col': col, 'value': aux.toString()})
+            else:
+                tokens_dl.append({'token': aux.toString(), 'line': line,
+                                  'col': col, 'value': aux.toString()})
 
-
-
-
-
-
-
-
-
-
-
-        pass
+    tokens_dl.append(
+        {"token": "$", "line": tokens_dl[-1]["line"], "col": tokens_dl[-1]["col"], "value": "EOF"})
+    return tokens_dl

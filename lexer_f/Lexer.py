@@ -5,52 +5,50 @@ from .Integer import *
 from .Real import *
 from .CharString import *
 
+
 class Lexer:
 
     def __init__(self, filename):
         self.words = {}
         wordprep(prewords, self.words)
-        reserve(Word("program",Tag.PROGRAM),self.words)
-        reserve(Word("constant",Tag.CONSTANT),self.words)
-        reserve(Word("var",Tag.VAR),self.words)
-        reserve(Word("begin",Tag.BEGIN),self.words)
-        reserve(Word("end",Tag.END),self.words)
-        reserve(Word("integer",Tag.INTEGER),self.words)
-        reserve(Word("real",Tag.REAL),self.words)
-        reserve(Word("boolean",Tag.BOOLEAN),self.words)
-        reserve(Word("string",Tag.STRING),self.words)
-        reserve(Word("writeln",Tag.WRITELN),self.words)
-        reserve(Word("readln",Tag.READLN),self.words)
-        reserve(Word("while",Tag.WHILE),self.words)
-        reserve(Word("do",Tag.DO),self.words)
-        reserve(Word("repeat",Tag.REPEAT),self.words)
-        reserve(Word("until",Tag.UNTIL),self.words)
-        reserve(Word("for",Tag.FOR),self.words)
-        reserve(Word("to",Tag.TO),self.words)
-        reserve(Word("downto",Tag.DOWNTO),self.words)
-        reserve(Word("if",Tag.IF),self.words)
-        reserve(Word("then",Tag.THEN),self.words)
-        reserve(Word("else",Tag.ELSE),self.words)
-        reserve(Word("not",Tag.NOT),self.words)
-        reserve(Word("div",Tag.DIV),self.words)
-        reserve(Word("mod",Tag.MOD),self.words)
-        reserve(Word("and",Tag.AND),self.words)
-        reserve(Word("or",Tag.OR),self.words)
-
-
-
+        reserve(Word("program", Tag.PROGRAM), self.words)
+        reserve(Word("constant", Tag.CONSTANT), self.words)
+        reserve(Word("var", Tag.VAR), self.words)
+        reserve(Word("begin", Tag.BEGIN), self.words)
+        reserve(Word("end", Tag.END), self.words)
+        reserve(Word("integer", Tag.INTEGER), self.words)
+        reserve(Word("real", Tag.REAL), self.words)
+        reserve(Word("boolean", Tag.BOOLEAN), self.words)
+        reserve(Word("string", Tag.STRING), self.words)
+        reserve(Word("writeln", Tag.WRITELN), self.words)
+        reserve(Word("readln", Tag.READLN), self.words)
+        reserve(Word("while", Tag.WHILE), self.words)
+        reserve(Word("do", Tag.DO), self.words)
+        reserve(Word("repeat", Tag.REPEAT), self.words)
+        reserve(Word("until", Tag.UNTIL), self.words)
+        reserve(Word("for", Tag.FOR), self.words)
+        reserve(Word("to", Tag.TO), self.words)
+        reserve(Word("downto", Tag.DOWNTO), self.words)
+        reserve(Word("if", Tag.IF), self.words)
+        reserve(Word("then", Tag.THEN), self.words)
+        reserve(Word("else", Tag.ELSE), self.words)
+        reserve(Word("not", Tag.NOT), self.words)
+        reserve(Word("div", Tag.DIV), self.words)
+        reserve(Word("mod", Tag.MOD), self.words)
+        reserve(Word("and", Tag.AND), self.words)
+        reserve(Word("or", Tag.OR), self.words)
 
         self.file = InputFile(filename)
         self.peek = ''
 
         pass
 
-    def isReserved(self,key):
+    def isReserved(self, key):
         if key.lower() in self.words:
             return True
         return False
 
-    def getReserved(self,key):
+    def getReserved(self, key):
         if key.lower() in self.words:
             return self.words[key.lower()]
 
@@ -76,11 +74,10 @@ class Lexer:
             if self.peek == None:
                 break
 
-
     def readCharString(self):
         auxString = "" + self.peek
         self.peek = self.file.getChar()
-        while self.peek != '"' and self.peek != "'" :
+        while self.peek != '"' and self.peek != "'":
             auxString += self.peek
             self.peek = self.file.getChar()
             if self.peek == None:
@@ -109,7 +106,6 @@ class Lexer:
 
         if self.peek == None:
             return Token(Tag.EOF)
-
 
         if self.peek == "(":
             if self.checkReadChar("*"):
@@ -145,7 +141,7 @@ class Lexer:
                 return Token(":")
 
         elif self.peek == '"' or self.peek == "'":
-                return self.readCharString()
+            return self.readCharString()
 
         if self.peek.isdigit():
             auxSD = ""
@@ -177,25 +173,27 @@ class Lexer:
                 return self.getReserved(auxSA)
             else:
                 w = Word(auxSA, Tag.ID)
-                reserve(w,self.words)
+                reserve(w, self.words)
                 return w
-
 
         tempTok = Token(self.peek)
         self.readCh()
         return tempTok
 
+    def getLine(self):
+        return self.file.lineN + 1
 
-
-
+    def getColumn(self):
+        return self.file.columnN + 1
 
 
 def wordprep(wordList, wds):
 
     for w in wordList:
-        reserve(w,wds)
+        reserve(w, wds)
 
     pass
 
-def reserve(w,wds):
+
+def reserve(w, wds):
     wds[w.lexeme] = w

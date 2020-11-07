@@ -1,6 +1,7 @@
 from .Token import *
 from .Tag import *
 
+
 class CharacterString(Token):
     def __init__(self, value):
         super().__init__(Tag.CHARACTERSTRING)
@@ -10,4 +11,4 @@ class CharacterString(Token):
         return self.value
 
     def toString(self):
-        return "STRING - VALUE = " + self.value
+        return "string"

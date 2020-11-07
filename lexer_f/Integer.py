@@ -11,4 +11,4 @@ class Integer(Token):
         return self.value
 
     def toString(self):
-        return "INTEGER - VALUE = " + str(self.value)
+        return "integer"
